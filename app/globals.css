@@ -408,6 +408,94 @@ img, svg { max-width: none; }
 .calm-note .title { font-weight: 700; color: var(--accent); }
 .calm-note a { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 10px; background: var(--accent); color: var(--surface) !important; text-decoration: none; font-weight: 700; font-size: 0.92em; }
 
+/* ---------- Game modals ---------- */
+.play-link { background: transparent; font: inherit; font-weight: 700; font-size: 0.95em; cursor: pointer; }
+.game-dialog {
+  width: min(720px, calc(100% - 32px)); max-height: calc(100% - 32px); padding: 0;
+  border: 1px solid var(--line); border-radius: 28px; background: var(--surface); color: var(--ink);
+  box-shadow: 0 40px 80px -30px rgba(23, 37, 42, .55);
+}
+.game-dialog::backdrop { background: rgba(30, 20, 32, 0.55); }
+.game-dialog[open] { animation: var(--enter) .35s cubic-bezier(.2, .7, .2, 1) both; }
+.game-dialog-inner { padding: 28px; display: flex; flex-direction: column; gap: 20px; }
+.game-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.game-dialog-head h2 { margin: 0; font-size: 1.6em; line-height: 1.2; }
+.game-dialog-head p { margin: 4px 0 0; }
+.game-dialog-head .round-btn { flex: none; }
+.game-dialog-foot { margin: 0; font-size: 0.85em; border-top: 1px solid var(--line); padding-top: 14px; }
+.game-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.game-controls .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.game-controls .btn { min-height: 48px; border: none; cursor: pointer; font: inherit; font-weight: 700; }
+.game-controls .chip.sq { width: 44px; padding: 0; }
+.game-controls .chip:disabled { opacity: 0.55; cursor: default; }
+.game-step { margin: 0; font-size: 1.05em; }
+.game-note { margin: 0; font-size: 0.9em; }
+
+.bubble-game { display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+.bubble-stage { width: 100%; display: flex; justify-content: center; padding: 8px 0; background: var(--tint4); border-radius: 22px; }
+.bubble-ring { width: min(280px, 70vw); aspect-ratio: 1; border-radius: 50%; border: 2px dashed var(--primary); display: flex; align-items: center; justify-content: center; margin: 16px; }
+.bubble {
+  width: 92%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--surface) 0 18%, var(--primary-soft) 45%, var(--primary) 100%);
+  transition-property: transform, opacity; transition-timing-function: ease-in-out;
+}
+.bubble-word { margin: 0; font-size: 1.5em; min-height: 1.5em; }
+
+.garden-grid { display: grid; gap: 10px; padding: 14px; border-radius: 22px; background: var(--tint1); }
+.plot {
+  aspect-ratio: 1; border-radius: 16px; border: 2px solid transparent; background: #8B5A3C; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; color: inherit;
+  background-image: radial-gradient(circle at 30% 30%, rgba(255,255,255,.12) 0 2px, transparent 3px), radial-gradient(circle at 70% 65%, rgba(0,0,0,.12) 0 2px, transparent 3px);
+}
+.plot:disabled { cursor: default; }
+.plot[aria-pressed="true"] { border-color: var(--surface); }
+.plot.missed { border: 2px dashed var(--surface); }
+.plot.wrong { opacity: 0.7; }
+
+.word-slots, .word-tiles { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.word-slots { padding: 16px; border-radius: 22px; background: var(--tint5); }
+.letter-tile {
+  width: 64px; height: 72px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+  font-family: var(--font-display), system-ui, sans-serif; font-weight: 600; font-size: 2em; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.letter-tile:disabled { cursor: default; }
+.word-tiles .letter-tile:disabled { background: transparent; border-style: dashed; }
+.letter-tile.slot { border-style: dashed; background: transparent; }
+.letter-tile.slot.filled { border-style: solid; background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.letter-tile.slot.right { background: #2F7D55; border-color: #2F7D55; color: #FFFFFF; }
+
+.tubes { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 20px 12px; border-radius: 22px; background: var(--tint3); }
+.tube {
+  width: 64px; height: 232px; padding: 8px 6px; border-radius: 0 0 32px 32px;
+  border: 3px solid var(--primary); border-top: none; background: var(--surface);
+  display: flex; flex-direction: column-reverse; gap: 4px; cursor: pointer; transition: transform .2s ease;
+}
+.tube.picked { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 14px 24px -14px rgba(23, 37, 42, .5); }
+.piece { flex: none; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.piece:first-child { border-radius: 10px 10px 26px 26px; }
+.piece.lifted { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.match-grid { display: grid; justify-content: center; gap: 10px; padding: 14px; border-radius: 22px; background: var(--tint6); }
+.match-card {
+  aspect-ratio: 4 / 5; border-radius: 14px; border: 2px solid var(--primary); cursor: pointer;
+  background: var(--primary); display: flex; align-items: center; justify-content: center;
+  background-image: radial-gradient(circle, rgba(255,255,255,.18) 2px, transparent 2.5px); background-size: 14px 14px;
+}
+.match-card.up { background: var(--surface); background-image: none; }
+.match-card.matched { border-color: #2F7D55; border-width: 3px; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .game-dialog[open] { animation: none; }
+  .bubble, .tube { transition: none !important; }
+}
+@media (max-width: 640px) {
+  .game-dialog-inner { padding: 20px; }
+  .letter-tile { width: 52px; height: 60px; font-size: 1.6em; }
+  .tube { width: 52px; height: 200px; }
+  .piece { height: 40px; }
+}
+
 /* ---------- Animations ---------- */
 @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }

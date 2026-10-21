@@ -101,7 +101,7 @@ export function LessonText() {
         <div className="calm-note">
           <p className="title">Feeling stirred up by this topic?</p>
           <p style={{ fontSize: "0.95em" }}>That’s okay. You can pause here and take a minute to breathe.</p>
-          <Link href="/#games">Take a breathing break</Link>
+          <Link href="/#play-bubble">Take a breathing break</Link>
         </div>
       </div>
     </aside>

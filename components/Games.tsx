@@ -1,6 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, type ComponentType } from "react";
+import { BubbleBreath } from "./games/BubbleBreath";
+import { CalmSort } from "./games/CalmSort";
+import { GameDialog } from "./games/GameDialog";
+import { MemoryMatch } from "./games/MemoryMatch";
+import { PatternGarden } from "./games/PatternGarden";
+import { WordBuilder } from "./games/WordBuilder";
 import { Flower } from "./icons";
 
 type Art = "bubble" | "garden" | "words" | "sort" | "match";
@@ -16,9 +22,46 @@ const GAMES: { title: string; cat: Category[]; mins: string; desc: string; art: 
 
 const FILTERS: ("All" | Category)[] = ["All", "Calm", "Focus", "Reading", "Memory"];
 
+const PLAY: Record<Art, { intro: string; Game: ComponentType<{ active: boolean }> }> = {
+  bubble: { intro: "Breathe in as the bubble grows and out as it shrinks. Pause whenever you like.", Game: BubbleBreath },
+  garden: { intro: "Look at the flowers, hide them when you’re ready, then plant them back.", Game: PatternGarden },
+  words: { intro: "Read the clue and build the word from the letter tiles.", Game: WordBuilder },
+  sort: { intro: "Move one piece at a time until each tube holds one colour and shape.", Game: CalmSort },
+  match: { intro: "Turn over two cards at a time to find the matching pairs.", Game: MemoryMatch },
+};
+
+const isArt = (v: string): v is Art => v in PLAY;
+
 export function Games() {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const games = GAMES.filter((g) => filter === "All" || g.cat.includes(filter));
+  const [playing, setPlaying] = useState<Art | null>(null);
+  // Games stay mounted after their first open, so closing one keeps your progress.
+  const [started, setStarted] = useState<Art[]>([]);
+
+  const play = (art: Art) => {
+    setStarted((s) => (s.includes(art) ? s : [...s, art]));
+    setPlaying(art);
+  };
+
+  // Links like /#play-bubble (from the check-in) open a game directly.
+  useEffect(() => {
+    const fromHash = () => {
+      const m = window.location.hash.match(/^#play-(\w+)$/);
+      if (m && isArt(m[1])) {
+        play(m[1]);
+        document.getElementById("games")?.scrollIntoView();
+      }
+    };
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
+    return () => window.removeEventListener("hashchange", fromHash);
+  }, []);
+
+  const close = () => {
+    setPlaying(null);
+    if (window.location.hash.startsWith("#play-")) history.replaceState(null, "", "#games");
+  };
 
   return (
     <section id="games" aria-labelledby="games-title" className="container games">
@@ -58,13 +101,21 @@ export function Games() {
                 <li>Silent mode</li>
                 <li>Pause anytime</li>
               </ul>
-              <a href="#play" className="play-link">
+              <button type="button" className="play-link" aria-haspopup="dialog" onClick={() => play(g.art)}>
                 Play {g.title}
-              </a>
+              </button>
             </div>
           </article>
         ))}
       </div>
+      {GAMES.filter((g) => started.includes(g.art)).map((g) => {
+        const { intro, Game } = PLAY[g.art];
+        return (
+          <GameDialog key={g.art} id={`game-${g.art}`} title={g.title} intro={intro} open={playing === g.art} onClose={close}>
+            <Game active={playing === g.art} />
+          </GameDialog>
+        );
+      })}
     </section>
   );
 }
