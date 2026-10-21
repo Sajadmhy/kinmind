@@ -8,7 +8,7 @@ import { useSettings } from "./SettingsProvider";
 
 export function Videos() {
   const { settings, toggle } = useSettings();
-  const { sign, lang, focus } = settings;
+  const { sign, captions, lang, focus } = settings;
 
   return (
     <>
@@ -45,12 +45,14 @@ export function Videos() {
                     <span>{lang} interpreter</span>
                   </div>
                 )}
-                <p className="caption" style={{ fontSize: "1.02em" }}>
-                  When your brain asks you to check the door again — that’s the OCD loop talking, not you.
-                </p>
+                {captions && (
+                  <p className="caption" style={{ fontSize: "1.02em" }}>
+                    When your brain asks you to check the door again — that’s the OCD loop talking, not you.
+                  </p>
+                )}
               </div>
               <div role="toolbar" aria-label="Video options" className="toolbar">
-                <button type="button" className="tool-btn" aria-pressed="true">
+                <button type="button" className="tool-btn" aria-pressed={captions} onClick={() => toggle("captions")}>
                   <CaptionsIcon />
                   Captions
                 </button>

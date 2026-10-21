@@ -19,7 +19,7 @@ const CHAPTERS = [
 
 export function LessonPlayer() {
   const { settings, update, toggle } = useSettings();
-  const { sign, lang } = settings;
+  const { sign, captions, lang } = settings;
   const [side, setSide] = useState<"left" | "right">("right");
   const [signSize, setSignSize] = useState(1);
   const [cap, setCap] = useState(1);
@@ -43,9 +43,11 @@ export function LessonPlayer() {
             <span style={{ color: "#2A1C2E" }}>{lang}</span>
           </div>
         )}
-        <p className="caption" style={{ bottom: 20, width: "70%", fontSize: CAPTION_SIZES[cap] }}>
-          Checking brings a moment of relief — so the brain learns to ask for it again.
-        </p>
+        {captions && (
+          <p className="caption" style={{ bottom: 20, width: "70%", fontSize: CAPTION_SIZES[cap] }}>
+            Checking brings a moment of relief — so the brain learns to ask for it again.
+          </p>
+        )}
       </div>
 
       <div className="progress">
@@ -71,7 +73,7 @@ export function LessonPlayer() {
           <HandIcon />
           Sign language
         </button>
-        <button type="button" className="tool-btn" aria-pressed="true">
+        <button type="button" className="tool-btn" aria-pressed={captions} onClick={() => toggle("captions")}>
           <CaptionsIcon />
           Captions
         </button>

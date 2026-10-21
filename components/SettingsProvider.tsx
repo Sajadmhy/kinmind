@@ -19,11 +19,12 @@ export type Settings = {
   focus: boolean;
   motion: boolean;
   sign: boolean;
+  captions: boolean;
   read: boolean;
   lang: SignLanguage;
 };
 
-export type ToggleKey = "dys" | "focus" | "motion" | "sign" | "read";
+export type ToggleKey = "dys" | "focus" | "motion" | "sign" | "captions" | "read";
 
 const DEFAULTS: Settings = {
   theme: "calm",
@@ -32,6 +33,7 @@ const DEFAULTS: Settings = {
   focus: false,
   motion: false,
   sign: true,
+  captions: true,
   read: false,
   lang: "ASL",
 };
