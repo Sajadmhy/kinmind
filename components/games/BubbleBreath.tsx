@@ -44,6 +44,13 @@ export function BubbleBreath({ active }: { active: boolean }) {
     setRunning((r) => !r);
   };
 
+  // Starts the count again from zero and stops the bubble, ready for a fresh start.
+  const reset = () => {
+    setRunning(false);
+    setPhase("out");
+    setBreaths(0);
+  };
+
   const big = phase !== "out" || !running;
   const scale = running ? (phase === "out" ? 0.55 : 1) : 0.75;
 
@@ -71,6 +78,11 @@ export function BubbleBreath({ active }: { active: boolean }) {
             </button>
           ))}
         </div>
+        {breaths > 0 && (
+          <button type="button" className="chip" onClick={reset}>
+            Reset breath count
+          </button>
+        )}
       </div>
       <p className="muted game-note">
         {p.in}s in · {p.hold}s hold · {p.out}s out{breaths > 0 ? ` · ${breaths} calm ${breaths === 1 ? "breath" : "breaths"} so far` : ""}
