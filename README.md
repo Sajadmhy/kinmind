@@ -5,6 +5,7 @@ A calm, neurodiverse-friendly website — psychology-based tools, gentle games a
 ## Pages
 
 - `/` — home: accessibility bar, hero, 1-minute check-in, guides, psychology tools, games, videos, accessibility promises, footer
+- `/guides/[slug]` — plain-language guides for ADHD, OCD, autism, dyslexia, dyspraxia and Tourette’s, each with an Easy Read view and listen option (content in `lib/guides.tsx`)
 - `/lessons/ocd-why-the-brain-asks-twice` — video lesson with sign-language interpreter controls, caption size, chapters, transcript / Easy Read / key points
 
 ## Accessibility settings
