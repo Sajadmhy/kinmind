@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSettings } from "../SettingsProvider";
+import { useSavedState } from "./useSavedState";
 
 type Phase = "in" | "hold" | "out";
 
@@ -18,8 +19,8 @@ export function BubbleBreath({ active }: { active: boolean }) {
   const { settings } = useSettings();
   const [running, setRunning] = useState(false);
   const [phase, setPhase] = useState<Phase>("out");
-  const [pace, setPace] = useState<Pace>("gentle");
-  const [breaths, setBreaths] = useState(0);
+  const [pace, setPace] = useSavedState<Pace>("bubble-pace", "gentle");
+  const [breaths, setBreaths] = useSavedState("bubble-breaths", 0);
 
   const p = PACES[pace];
   const seconds = p[phase];

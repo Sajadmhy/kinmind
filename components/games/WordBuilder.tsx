@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useSavedState } from "./useSavedState";
 
 const WORDS = [
   { word: "sun", hint: "It shines in the sky in the daytime." },
@@ -21,6 +21,10 @@ function shuffle<T>(xs: T[]) {
   return a;
 }
 
+function tilesFor(word: string) {
+  return shuffle(word.split("").map((letter, id) => ({ id, letter })));
+}
+
 function speak(text: string) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
@@ -30,15 +34,15 @@ function speak(text: string) {
 }
 
 export function WordBuilder() {
-  const [index, setIndex] = useState(0);
-  const [sound, setSound] = useState(false);
-  const [built, setBuilt] = useState<number[]>([]);
-  const [showWord, setShowWord] = useState(false);
-  const { word, hint } = WORDS[index];
+  const [index, setIndex] = useSavedState("words-index", 0);
+  const [sound, setSound] = useSavedState("words-sound", false);
+  const [built, setBuilt] = useSavedState<number[]>("words-built", []);
+  const [showWord, setShowWord] = useSavedState("words-show", false);
+  const { word, hint } = WORDS[index % WORDS.length];
 
-  // Tile order is shuffled once per word; each tile keeps its own id so
-  // repeated letters (like the o's in "moon") stay distinct.
-  const tiles = useMemo(() => shuffle(word.split("").map((letter, id) => ({ id, letter }))), [word]);
+  // Tile order is shuffled once per word and saved with it; each tile keeps its
+  // own id so repeated letters (like the o's in "moon") stay distinct.
+  const [tiles, setTiles] = useSavedState("words-tiles", () => tilesFor(word));
 
   const attempt = built.map((id) => tiles.find((t) => t.id === id)!.letter).join("");
   const full = built.length === word.length;
@@ -51,7 +55,9 @@ export function WordBuilder() {
   };
 
   const next = () => {
-    setIndex((i) => (i + 1) % WORDS.length);
+    const i = (index + 1) % WORDS.length;
+    setIndex(i);
+    setTiles(tilesFor(WORDS[i].word));
     setBuilt([]);
     setShowWord(false);
   };

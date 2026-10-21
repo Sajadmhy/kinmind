@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSavedState } from "./useSavedState";
 
 const CAP = 4;
 type Color = "a" | "b" | "c";
@@ -25,11 +26,15 @@ const top = (t: Color[]) => t[t.length - 1];
 const isSolved = (t: Tubes) => t.every((x) => x.length === 0 || (x.length === CAP && x.every((c) => c === x[0])));
 
 export function CalmSort() {
-  const [puzzle, setPuzzle] = useState(0);
-  const [tubes, setTubes] = useState<Tubes>(() => copy(PUZZLES[0]));
-  const [history, setHistory] = useState<Tubes[]>([]);
+  const [puzzle, setPuzzle] = useSavedState("sort-puzzle", 0);
+  const [tubes, setTubes] = useSavedState<Tubes>("sort-tubes", () => copy(PUZZLES[0]));
+  const [history, setHistory] = useSavedState<Tubes[]>("sort-history", []);
   const [picked, setPicked] = useState<number | null>(null);
-  const [message, setMessage] = useState("Tap a tube to pick up its top piece, then tap where it should go.");
+  const [message, setMessage] = useState(() =>
+    history.length && !isSolved(tubes)
+      ? "Welcome back — your tubes are just as you left them."
+      : "Tap a tube to pick up its top piece, then tap where it should go.",
+  );
 
   const solved = isSolved(tubes);
 

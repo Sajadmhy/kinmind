@@ -56,7 +56,7 @@ export function GameDialog({ id, title, intro, open, onClose, children }: Props)
           </button>
         </header>
         {children}
-        <p className="game-dialog-foot muted">No timer · No score · Close any time — your game is kept until you leave the page.</p>
+        <p className="game-dialog-foot muted">No timer · No score · Close any time — your progress is saved on this device.</p>
       </div>
     </dialog>
   );

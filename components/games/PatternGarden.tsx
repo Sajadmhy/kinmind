@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useSavedState } from "./useSavedState";
 
 const ROWS = 3;
 const COLS = 4;
@@ -11,30 +11,27 @@ type Stage = "look" | "plant" | "done";
 function newGarden(count: number) {
   const picks = new Set<number>();
   while (picks.size < count) picks.add(Math.floor(Math.random() * CELLS));
-  return picks;
+  return [...picks];
 }
 
 export function PatternGarden() {
-  const [count, setCount] = useState(3);
-  const [garden, setGarden] = useState(() => newGarden(3));
-  const [planted, setPlanted] = useState<Set<number>>(new Set());
-  const [stage, setStage] = useState<Stage>("look");
+  const [count, setCount] = useSavedState("garden-count", 3);
+  const [gardenList, setGarden] = useSavedState("garden-flowers", () => newGarden(3));
+  const [plantedList, setPlanted] = useSavedState<number[]>("garden-planted", []);
+  const [stage, setStage] = useSavedState<Stage>("garden-stage", "look");
+  const garden = new Set(gardenList);
+  const planted = new Set(plantedList);
 
   const restart = (n = count) => {
     setCount(n);
     setGarden(newGarden(n));
-    setPlanted(new Set());
+    setPlanted([]);
     setStage("look");
   };
 
   const tap = (i: number) => {
     if (stage !== "plant") return;
-    setPlanted((prev) => {
-      const next = new Set(prev);
-      if (next.has(i)) next.delete(i);
-      else next.add(i);
-      return next;
-    });
+    setPlanted((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
   };
 
   const found = [...planted].filter((i) => garden.has(i)).length;

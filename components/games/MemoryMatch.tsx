@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
+import { useSavedState } from "./useSavedState";
 
 const SYMBOLS: { name: string; color: string; draw: ReactNode }[] = [
   { name: "sun", color: "#E0861A", draw: <><circle cx="16" cy="16" r="6" /><path d="M16 3v4M16 25v4M3 16h4M25 16h4M7 7l3 3M22 22l3 3M7 25l3-3M22 10l3-3" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" /></> },
@@ -30,11 +31,12 @@ function deal(size: number): Card[] {
 }
 
 export function MemoryMatch() {
-  const [size, setSize] = useState(12);
-  const [cards, setCards] = useState(() => deal(12));
-  const [open, setOpen] = useState<number[]>([]);
-  const [matched, setMatched] = useState<Set<number>>(new Set());
-  const [turns, setTurns] = useState(0);
+  const [size, setSize] = useSavedState("match-size", 12);
+  const [cards, setCards] = useSavedState("match-cards", () => deal(12));
+  const [open, setOpen] = useSavedState<number[]>("match-open", []);
+  const [matchedList, setMatched] = useSavedState<number[]>("match-matched", []);
+  const [turns, setTurns] = useSavedState("match-turns", 0);
+  const matched = new Set(matchedList);
 
   const pairs = size / 2;
   const found = matched.size / 2;
@@ -44,7 +46,7 @@ export function MemoryMatch() {
     setSize(n);
     setCards(deal(n));
     setOpen([]);
-    setMatched(new Set());
+    setMatched([]);
     setTurns(0);
   };
 
@@ -58,7 +60,7 @@ export function MemoryMatch() {
       setTurns((t) => t + 1);
       const [x, y] = next;
       if (cards[x].symbol === cards[y].symbol) {
-        setMatched((m) => new Set([...m, x, y]));
+        setMatched((m) => [...m, x, y]);
         setOpen([]);
       }
     }
